@@ -53,3 +53,11 @@ credentials.json
 # See MODEL_FILES.md for download instructions
 triplet_embeddings.pkl
 triplet_sentences.pkl
+
+# Local run logs (may contain queries)
+logs/*.jsonl
+
+# Local backups / restore points
+*.bak
+*.bak.*
+*.backup
