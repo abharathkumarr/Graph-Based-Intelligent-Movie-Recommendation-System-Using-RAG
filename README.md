@@ -124,16 +124,20 @@ Traditional recommendation systems rely heavily on collaborative or content-base
 
 ---
 
-## 🎬 Interactive UI
+## Interactive UI
 
 We've built a **Streamlit-based web application** that provides an intuitive interface for movie recommendations:
 
+![Streamlit Demo](assets/demo_screenshot.png)
+
+*Live demo: a natural-language query ("Can you recommend me a recent movie with Adventure genre and rating greater than 3 with actor Leonardo DiCaprio") is answered with a grounded recommendation. The sidebar exposes the LLM model selector, structured-log toggle, and session memory; the main panel shows the response time (1.45s), the selected model (llama-3.3-70b-versatile), and the lexical grounding score (0.25) for evaluation-first transparency.*
+
 ### Features
-- 🎯 **Natural Language Queries**: Ask questions in plain English
-- 💡 **Example Queries**: Pre-configured queries for quick testing
-- 🎨 **Knowledge Graph Visualization**: Background displays the actual graph structure
-- ⚡ **Real-time Recommendations**: Powered by Groq API for fast inference
-- 📊 **Response Metrics**: Shows processing time and number of facts retrieved
+- **Natural Language Queries**: Ask questions in plain English
+- **Example Queries**: Pre-configured queries for quick testing
+- **Knowledge Graph Visualization**: Background displays the actual graph structure
+- **Real-time Recommendations**: Powered by Groq API for fast inference
+- **Response Metrics**: Shows processing time, model used, and grounding score
 
 ### How to Run
 

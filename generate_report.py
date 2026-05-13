@@ -537,9 +537,15 @@ def build_docx(path: Path):
         "pipeline trace are exposed in the sidebar to support live evaluation-first "
         "demonstrations."
     )
-    Img("assets/knowledge_graph_bg.png", width_inches=5.5,
-        caption="Figure 6. Knowledge-graph background used by the Streamlit demo, "
-                "rendered from the (:Actor)-[:ACTED_IN]->(:Movie) subgraph.")
+    Img("assets/demo_screenshot.png", width_inches=6.2,
+        caption="Figure 6. Live demo of the Streamlit UI. The natural-language query "
+                "\"Can you recommend a recent Adventure movie rated above 3 with "
+                "Leonardo DiCaprio\" is answered with The Revenant, grounded in the "
+                "retrieved KG facts. The sidebar exposes model switching and "
+                "structured logging; the response card shows the per-query latency "
+                "(1.45s), selected model (llama-3.3-70b-versatile), and the lexical "
+                "grounding score (0.25). The knowledge-graph background is rendered "
+                "from the (:Actor)-[:ACTED_IN]->(:Movie) subgraph for visual context.")
 
     # -------- 9. Conclusion --------
     H("9. Conclusion and Future Work", level=1)
@@ -932,9 +938,13 @@ def build_pdf(path: Path):
       "knowledge-graph visualization as the page background. Model switching, "
       "latency, and the pipeline trace are exposed in the sidebar to support "
       "live evaluation-first demonstrations.")
-    Img("assets/knowledge_graph_bg.png", width_inches=5.0,
-        cap="Figure 6. Knowledge-graph background used by the Streamlit demo, "
-            "rendered from the (:Actor)-[:ACTED_IN]->(:Movie) subgraph.")
+    Img("assets/demo_screenshot.png", width_inches=5.8,
+        cap="Figure 6. Live demo of the Streamlit UI. The query \"recommend a "
+            "recent Adventure movie rated above 3 with Leonardo DiCaprio\" is "
+            "answered with The Revenant, grounded in retrieved KG facts. "
+            "Per-query latency (1.45s), selected model (llama-3.3-70b-versatile), "
+            "and the lexical grounding score (0.25) are surfaced for "
+            "evaluation-first transparency.")
 
     P("9. Conclusion and Future Work", h1)
     P("We presented an evaluation-first Knowledge-Graph + RAG movie recommendation "
