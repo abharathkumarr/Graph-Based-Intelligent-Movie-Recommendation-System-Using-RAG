@@ -1,0 +1,52 @@
+model,query,latency_sec,output_tokens_est,estimated_cost_usd,gt_available,gt_count,pred_count,precision_at_10,recall_at_10,f1_at_10,error
+llama-3.3-70b-versatile,Movies acted by Tom Hanks,0.7669029235839844,189,,True,38,37,1.0,0.2631578947368421,0.4166666666666667,
+llama-3.3-70b-versatile,Find movies with IMDb rating above 8.0,0.4817659854888916,92,,True,591,22,0.6,0.010169491525423728,0.02,
+llama-3.3-70b-versatile,List adventure movies released after 2010,0.29817628860473633,21,,True,162,4,0.3,0.018518518518518517,0.03488372093023255,
+llama-3.3-70b-versatile,Comedy movies produced in USA,0.4763455390930176,100,,False,0,17,,,,
+llama-3.3-70b-versatile,Movies directed by Steven Spielberg,120.37656664848328,0,,True,30,0,0.0,0.0,0.0,"Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jrq8405zf24s7rh088absq0s` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99760, Requested 446. Please try again in 2m57.984s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+llama-3.3-70b-versatile,Science fiction movies from the 1990s,120.4256865978241,0,,True,151,0,0.0,0.0,0.0,"Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jrq8405zf24s7rh088absq0s` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99616, Requested 633. Please try again in 3m35.136s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+llama-3.3-70b-versatile,Movies in English language,40.773704051971436,234,,False,0,40,,,,
+llama-3.3-70b-versatile,Action movies with high budget,120.37376761436462,0,,False,0,0,,,,"Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jrq8405zf24s7rh088absq0s` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99926, Requested 650. Please try again in 8m17.664s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+llama-3.3-70b-versatile,Drama movies starring Meryl Streep,0.0,0,,True,28,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Animated movies for children,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies released in 1999,0.0,0,,True,266,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Crime thrillers with strong reviews,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Romantic comedies from the 2000s,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,War movies directed by Christopher Nolan,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies featuring Leonardo DiCaprio,0.0,0,,True,24,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Horror movies released after 2015,0.0,0,,True,8,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Biography films about musicians,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies filmed in France,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Fantasy movies based on books,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies with runtime over 150 minutes,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Independent films with low budget,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies tagged as Film-Noir,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Western movies from classic era,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Musical movies with high ratings,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies starring Brad Pitt,0.0,0,,True,30,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Documentary-style movies about space,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies produced by Pixar,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Sequel movies in Action genre,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies with tagline mentioning love,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies about robots or AI,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Sports movies about baseball,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies set in New York City,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Historical dramas before 1950,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies starring Julia Roberts,0.0,0,,True,29,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies in Spanish language,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Family-friendly adventure films,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies with IMDb rating between 7 and 8,0.0,0,,True,3611,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Dark comedy movies,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies directed by Martin Scorsese,0.0,0,,True,30,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies featuring ensemble casts,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies about heists or bank robbery,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies with strong female lead,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Post-apocalyptic science fiction,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies starring Morgan Freeman,0.0,0,,True,38,0,0.0,0.0,0.0,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies released in December,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies with tag Adventure and year after 2005,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Psychological thriller recommendations,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies similar to The Matrix in genre,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies starring Johnny Depp in fantasy,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies with high number of user ratings,0.0,0,,False,0,0,,,,quota_exhausted_skipped
+llama-3.3-70b-versatile,Movies directed by Quentin Tarantino,0.0,0,,True,12,0,0.0,0.0,0.0,quota_exhausted_skipped
