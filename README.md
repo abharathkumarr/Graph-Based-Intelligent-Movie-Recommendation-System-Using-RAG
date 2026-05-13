@@ -14,6 +14,24 @@
 
 ---
 
+## Submission Index (for the reviewer)
+
+| If you want to see... | Open this file |
+|---|---|
+| **Final project report (Turnitin upload)** | [`report/Report_Final.pdf`](./report/Report_Final.pdf) |
+| Editable Word version of the report | [`report/Report_Final.docx`](./report/Report_Final.docx) |
+| Final presentation slides | [`report/CMPE258_Project.pptx`](./report/CMPE258_Project.pptx) |
+| Project proposal | [`report/CMPE258_ProjectProposal.pdf`](./report/CMPE258_ProjectProposal.pdf) |
+| Main implementation + evaluation code | [`CMPE258_Project_Code.ipynb`](./CMPE258_Project_Code.ipynb) |
+| Streamlit demo UI source | [`app_full.py`](./app_full.py) |
+| Per-query evaluation results | [`evaluation/eval_detailed_results.csv`](./evaluation/eval_detailed_results.csv) |
+| Per-model summary table | [`evaluation/eval_model_summary.csv`](./evaluation/eval_model_summary.csv) |
+| Evaluation plots (4 figures) | [`evaluation/`](./evaluation/) |
+| Architecture diagram | [`pipeline.png`](./pipeline.png) |
+| Rubric alignment | [`docs/RUBRIC_ALIGNMENT.md`](./docs/RUBRIC_ALIGNMENT.md) |
+
+---
+
 ## Overview
 
 This project implements an **intelligent movie recommendation system** that combines the structured knowledge of **Knowledge Graphs** with the natural language understanding of **Large Language Models (LLMs)** using **Retrieval-Augmented Generation (RAG)**.
@@ -148,20 +166,27 @@ We've built a **Streamlit-based web application** that provides an intuitive int
 
 ## Results
 
-### System Performance
+### Extended Evaluation: 51 Queries x 3 Groq LLMs
 
-**Overall RAG System Metrics:**
-- Average Precision@10: **0.65**
-- Average Recall@10: **0.26**
-- Average F1-score@10: **0.30**
-- Average Response Time: **~2-3 seconds**
+We evaluated three Groq-hosted LLMs on the same 51 natural-language queries with the
+same retriever and prompt. 15 queries have Cypher-derived ground truth used for
+Precision/Recall/F1; the remaining 36 contribute latency and non-empty-answer-rate
+evidence.
+
+| Model | P@10 | R@10 | F1@10 | Mean Latency | Non-empty |
+|---|---|---|---|---|---|
+| **llama-3.1-8b-instant** (production pick) | **0.707** | **0.225** | **0.317** | **2.97 s** | 51/51 |
+| openai/gpt-oss-20b | 0.507 | 0.165 | 0.225 | 6.59 s | 43/51 |
+| llama-3.3-70b-versatile | 0.127 | 0.019 | 0.031 | 7.92 s | 5/51 |
+
+Raw artifacts: see [`evaluation/`](./evaluation/) for the full per-query CSVs and the
+4 result figures. Full write-up: [`report/Report_Final.pdf`](./report/Report_Final.pdf).
 
 ### Key Achievements
-✅ **Fact-Grounded Recommendations**: All suggestions are backed by verifiable knowledge graph triplets  
-✅ **High Retrieval Quality**: Retrieved facts consistently match Neo4j Cypher query outputs  
-✅ **Natural Language Understanding**: Successfully handles diverse query types and phrasings  
-✅ **Explainable Results**: LLM generates human-readable explanations alongside recommendations  
-✅ **Interactive Interface**: Fully functional web UI for real-time demonstrations
+- **Fact-Grounded Recommendations**: All suggestions are backed by verifiable knowledge graph triplets.
+- **High Retrieval Quality**: Retrieved facts consistently match Neo4j Cypher query outputs.
+- **Evaluation-driven model selection**: The production pick is justified by Pareto-optimal F1@10 AND latency, not by defaulting to the largest model.
+- **Interactive demo**: Streamlit UI with model switching, pipeline trace, and grounding score for live qualitative verification.
 
 ---
 
@@ -234,18 +259,58 @@ We've built a **Streamlit-based web application** that provides an intuitive int
 
 ## Repository Structure
 
+The repository is grouped by purpose so a reviewer can find each deliverable at a glance:
+
 ```
-├── CMPE258_Project_Code.ipynb    # Main implementation notebook
-├── CMPE258_ProjectProposal.pdf   # Project proposal document
-├── README.md                      # Project documentation (this file)
-├── pipeline.png                   # Architecture diagram
-├── app_full.py                    # Streamlit web application
-├── requirements_ui.txt            # Python dependencies for UI
-├── run_app.sh                     # Shell script to launch the app
-├── triplet_sentences.pkl          # Serialized knowledge sentences (9.3MB)
-├── triplet_embeddings.pkl         # Serialized embeddings (337MB)
-└── assets/                        # UI resources (background images)
+.
+|-- README.md                       # This file (project overview + quickstart)
+|-- LICENSE                         # MIT license
+|-- pipeline.png                    # Architecture diagram (referenced by README + report)
+|-- .env.example                    # Documents GROQ_API_KEY (no real key in repo)
+|-- .gitignore                      # Excludes secrets, *.pkl, logs, local backups
+|-- requirements.txt                # Notebook dependencies
+|-- requirements_ui.txt             # Streamlit UI dependencies
+|-- run_app.sh                      # Launches the Streamlit demo
+|-- app_full.py                     # Streamlit UI (multi-model, grounding, pipeline trace)
+|-- generate_report.py              # Reproducible Report_Final.{docx,pdf} builder
+|-- CMPE258_Project_Code.ipynb      # Main implementation + evaluation notebook
+|-- knowledge_graph_ACTED_IN.html   # KG visualization used by the demo
+|
+|-- data/                           # INPUT to the evaluation
+|   `-- eval_queries.json           # 51-query evaluation set
+|
+|-- assets/                         # UI assets
+|   `-- knowledge_graph_bg.png      # Background image for the Streamlit demo
+|
+|-- docs/                           # SUPPORTING DOCUMENTATION
+|   |-- USAGE.md                    # End-user usage instructions
+|   |-- DEPLOYMENT.md               # Hosting / deployment notes
+|   |-- MODEL_FILES.md              # How to obtain the .pkl knowledge files
+|   |-- CHANGELOG.md                # Release log
+|   |-- CONTRIBUTING.md             # Contribution guidelines
+|   `-- RUBRIC_ALIGNMENT.md         # Mapping to the CMPE 258 rubric
+|
+|-- evaluation/                     # EVALUATION EVIDENCE (Section 7 of the report)
+|   |-- evaluation_visualizations.py
+|   |-- eval_detailed_results.csv   # Full per-query metrics for all 3 models
+|   |-- eval_model_summary.csv      # Aggregated mean metrics per model
+|   |-- eval_partial_*.csv          # Per-model snapshots (3 files)
+|   |-- eval_model_quality_latency.png
+|   |-- eval_llama_3_1_8b_instant_per_query_metrics.png
+|   |-- eval_llama_3_1_8b_instant_precision_recall_vs_k.png
+|   `-- eval_llama_3_1_8b_instant_confusion_matrix.png
+|
+`-- report/                         # SUBMISSION DELIVERABLES
+    |-- Report_Final.pdf            # <- Upload this to Canvas (Turnitin-ready)
+    |-- Report_Final.docx           # Editable Word version of the report
+    |-- Report.pdf                  # Team's original draft (kept for reference)
+    |-- CMPE258_Project.pptx        # Final presentation slides
+    `-- CMPE258_ProjectProposal.pdf # Original project proposal
 ```
+
+Large pickle files (`triplet_sentences.pkl`, `triplet_embeddings.pkl`) are excluded from
+git via `.gitignore`; see [`docs/MODEL_FILES.md`](./docs/MODEL_FILES.md) for how to
+obtain them.
 
 ---
 
