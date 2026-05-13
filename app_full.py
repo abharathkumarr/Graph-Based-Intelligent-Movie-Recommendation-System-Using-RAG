@@ -12,6 +12,51 @@ import faiss
 import time
 import os
 import base64
+import json
+import re
+import html
+from datetime import datetime, timezone
+
+LOG_DIR = "logs"
+LOG_FILE = os.path.join(LOG_DIR, "rag_pipeline.jsonl")
+
+# Groq-hosted models for multi-model comparison (all runnable with same API key).
+GROQ_MODEL_OPTIONS = [
+    ("llama-3.3-70b-versatile (default)", "llama-3.3-70b-versatile"),
+    ("llama-3.1-8b-instant", "llama-3.1-8b-instant"),
+    ("mixtral-8x7b-32768", "mixtral-8x7b-32768"),
+]
+
+_STOPWORDS = {
+    "the", "a", "an", "and", "or", "to", "of", "in", "on", "for", "with", "is", "are", "was",
+    "were", "be", "been", "being", "it", "this", "that", "these", "those", "as", "at", "by",
+    "from", "not", "no", "yes", "do", "does", "did", "have", "has", "had", "i", "you", "we",
+    "they", "he", "she", "movie", "movies", "film", "films",
+}
+
+
+def _tokenize(text: str):
+    return [w for w in re.findall(r"[a-z0-9']+", text.lower()) if w not in _STOPWORDS and len(w) > 2]
+
+
+def grounding_overlap_score(answer: str, source_docs, max_docs: int = 12) -> float:
+    """Share of non-trivial answer tokens that appear in retrieved facts (simple grounding check)."""
+    if not answer or not source_docs:
+        return 0.0
+    ctx = " ".join(d.page_content for d in source_docs[:max_docs])
+    ctx_tokens = set(_tokenize(ctx))
+    ans_tokens = _tokenize(answer)
+    if not ans_tokens:
+        return 1.0
+    hit = sum(1 for t in ans_tokens if t in ctx_tokens)
+    return hit / len(ans_tokens)
+
+
+def append_jsonl(path: str, record: dict):
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    record["ts"] = datetime.now(timezone.utc).isoformat()
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 # Page configuration
 st.set_page_config(
@@ -306,13 +351,13 @@ st.markdown(f"""
     }}
     
     ::-webkit-scrollbar-thumb {{
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #4a90d9 0%, #6ea8ff 100%);
         border-radius: 10px;
     }}
     
     /* Spinner styling */
     .stSpinner > div {{
-        border-top-color: #f093fb !important;
+        border-top-color: #6ea8ff !important;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -360,24 +405,36 @@ def load_rag_system():
     except Exception as e:
         return None, None, None, f"error: {str(e)}"
 
-def create_qa_chain(vectorstore, groq_api_key):
-    """Create the QA chain with Groq"""
+def create_qa_chain(vectorstore, groq_api_key, model_name: str = "llama-3.3-70b-versatile"):
+    """Create the QA chain with Groq (RAG = retriever tool + LLM)."""
     try:
-        # Initialize LLM
         llm = ChatGroq(
             temperature=0,
-            model_name="llama-3.3-70b-versatile",
-            groq_api_key=groq_api_key
+            model_name=model_name,
+            groq_api_key=groq_api_key,
         )
-        
-        # Create retriever
-        retriever = vectorstore.as_retriever(search_kwargs={"k": 500})
-        
-        # Create prompt template
-        prompt_template = PromptTemplate.from_template("""
-You are a movie recommendation expert.
 
-Use only the facts below. If the answer is not present, say you do not know.
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 500})
+
+        # Few-shot examples (Option 2: few-shot for prompting).
+        prompt_template = PromptTemplate.from_template("""
+You are a movie recommendation expert. Use only the facts in Facts. If the answer is not supported, say you do not know.
+
+Few-shot examples (follow this style):
+
+Facts:
+Tom Hanks ACTED_IN Saving Private Ryan. Saving Private Ryan has imdb rating 8.6.
+Question:
+Name one highly rated Tom Hanks movie from the facts.
+Answer:
+Saving Private Ryan (per facts: Tom Hanks acted in it and it has a high IMDb rating).
+
+Facts:
+Toy Story was released in year 1995. Toy Story is in genre Animation.
+Question:
+When was Toy Story released?
+Answer:
+1995 (from the facts).
 
 Facts:
 {context}
@@ -387,17 +444,17 @@ Question:
 
 Answer:
 """)
-        
-        # Create QA chain
+
         qa_chain = RetrievalQA.from_chain_type(
             llm=llm,
             retriever=retriever,
             chain_type="stuff",
-            chain_type_kwargs={"prompt": prompt_template}
+            chain_type_kwargs={"prompt": prompt_template},
+            return_source_documents=True,
         )
-        
+
         return qa_chain, None
-    
+
     except Exception as e:
         return None, str(e)
 
@@ -409,27 +466,46 @@ def main():
     # Load RAG system
     vectorstore, encoder_model, triplet_sentences, status = load_rag_system()
     
-    # Check API key
+    # Check API key + model (Option 2: multi-model comparison in UI)
     groq_api_key = st.sidebar.text_input("🔑 Enter Groq API Key", type="password")
+    model_choice_idx = st.sidebar.selectbox(
+        "🤖 LLM model (same eval, compare latency)",
+        options=list(range(len(GROQ_MODEL_OPTIONS))),
+        format_func=lambda i: GROQ_MODEL_OPTIONS[i][0],
+        help="Run the same query with different Groq models to compare speed and style.",
+    )
+    model_name = GROQ_MODEL_OPTIONS[model_choice_idx][1]
+
+    if "conversation_turns" not in st.session_state:
+        st.session_state.conversation_turns = []
     
     if status == "missing_files":
         st.markdown("""
         <div class="warning-box">
             <strong>⚠️ Model Data Not Found!</strong><br><br>
             Please follow these steps:<br>
-            1. Run the code in <code>save_model_data.py</code> in your Colab notebook<br>
-            2. Download <code>triplet_sentences.pkl</code> and <code>triplet_embeddings.pkl</code><br>
-            3. Place them in the same folder as <code>app.py</code><br>
-            4. Restart this Streamlit app
+            1. See <code>MODEL_FILES.md</code> for how to obtain <code>triplet_sentences.pkl</code> and <code>triplet_embeddings.pkl</code><br>
+            2. Place them in the same folder as <code>app_full.py</code><br>
+            3. Restart this Streamlit app
         </div>
         """, unsafe_allow_html=True)
         return
-    
+
     elif status.startswith("error"):
         st.error(f"❌ Error loading model: {status}")
         return
     
-    # Create two columns
+    st.sidebar.caption(f"Structured logs append to `{LOG_FILE}` (prompt policy + pipeline trace).")
+
+    with st.sidebar.expander("🧠 Session memory (last turns)", expanded=False):
+        if not st.session_state.conversation_turns:
+            st.caption("No turns yet — run a query.")
+        else:
+            for turn in reversed(st.session_state.conversation_turns[-6:]):
+                st.markdown(f"**Model:** `{turn['model']}` · **Latency:** {turn['latency_sec']}s · **Grounding:** {turn['grounding']}")
+                st.markdown(f"**Q:** {turn['query'][:220]}{'…' if len(turn['query']) > 220 else ''}")
+                st.markdown(f"**A:** {turn['answer'][:320]}{'…' if len(turn['answer']) > 320 else ''}")
+                st.divider()
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -456,27 +532,100 @@ def main():
                 st.warning("⚠️ Please enter your Groq API key in the sidebar!")
             else:
                 with st.spinner('🎞️ Searching through 229,894 movie facts...'):
-                    # Create QA chain
-                    qa_chain, error = create_qa_chain(vectorstore, groq_api_key)
-                    
+                    qa_chain, error = create_qa_chain(vectorstore, groq_api_key, model_name=model_name)
+
                     if error:
                         st.error(f"❌ Error creating QA chain: {error}")
                     else:
                         try:
-                            # Get response
                             start_time = time.time()
                             result = qa_chain.invoke({"query": user_query})
                             elapsed_time = time.time() - start_time
-                            
-                            # Display result
-                            st.markdown("""
+
+                            answer = result.get("result") or ""
+                            sources = result.get("source_documents") or []
+                            grounding = grounding_overlap_score(answer, sources)
+
+                            # Domain guardrail: discourage ungrounded speculation
+                            if sources and grounding < 0.06 and "do not know" not in answer.lower():
+                                st.info(
+                                    "Guardrail: low lexical overlap with retrieved facts. "
+                                    "For strict demos, prefer answers that cite the facts shown below."
+                                )
+
+                            pipeline_trace = [
+                                {
+                                    "stage": "plan",
+                                    "note": "Use KG-derived retrieval then LLM with facts-only policy",
+                                },
+                                {
+                                    "stage": "execute",
+                                    "tool": "faiss_graph_fact_retriever",
+                                    "k": 500,
+                                    "n_docs_returned": len(sources),
+                                },
+                                {
+                                    "stage": "execute",
+                                    "tool": "groq_chat_completion",
+                                    "model": model_name,
+                                },
+                                {
+                                    "stage": "critic",
+                                    "tool": "token_grounding_overlap",
+                                    "grounding_score": round(grounding, 4),
+                                },
+                            ]
+
+                            append_jsonl(
+                                LOG_FILE,
+                                {
+                                    "query": user_query,
+                                    "model": model_name,
+                                    "latency_sec": round(elapsed_time, 4),
+                                    "n_sources": len(sources),
+                                    "grounding_score": round(grounding, 4),
+                                    "pipeline_trace": pipeline_trace,
+                                    "answer_preview": answer[:800],
+                                },
+                            )
+
+                            st.session_state.conversation_turns.append(
+                                {
+                                    "query": user_query,
+                                    "answer": answer[:2000],
+                                    "model": model_name,
+                                    "grounding": round(grounding, 3),
+                                    "latency_sec": round(elapsed_time, 3),
+                                }
+                            )
+                            st.session_state.conversation_turns = st.session_state.conversation_turns[-10:]
+
+                            safe_answer = html.escape(answer)
+                            st.markdown(
+                                f"""
                             <div class="result-box">
                                 <div class="result-title">🎯 AI Recommendations</div>
-                                <div class="result-content">{}</div>
-                                <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 15px;">⏱️ Response time: {:.2f}s</p>
+                                <div class="result-content">{safe_answer}</div>
+                                <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 15px;">
+                                    ⏱️ Response time: {elapsed_time:.2f}s · Model: {html.escape(model_name)} · Grounding score: {grounding:.2f}
+                                </p>
                             </div>
-                            """.format(result["result"], elapsed_time), unsafe_allow_html=True)
-                            
+                            """,
+                                unsafe_allow_html=True,
+                            )
+
+                            with st.expander("📎 Retrieved facts used as citations (grounding)", expanded=False):
+                                for i, doc in enumerate(sources[:12], start=1):
+                                    snippet = (doc.page_content or "")[:400]
+                                    st.markdown(f"**{i}.** {snippet}{'…' if len(doc.page_content or '') > 400 else ''}")
+
+                            with st.expander("🧭 Pipeline trace (agent-style stages + “tools”)", expanded=False):
+                                st.json(pipeline_trace)
+                                st.caption(
+                                    "This maps to Option 2 language: retrieve from the vector store over KG sentences, "
+                                    "generate with the LLM, then a lightweight critic scores overlap with retrieved text."
+                                )
+
                         except Exception as e:
                             st.error(f"❌ Error processing query: {str(e)}")
         
@@ -514,7 +663,7 @@ def main():
         <li>🔷 <strong>Neo4j Knowledge Graph</strong> (28,865 nodes, 166,262 relationships)</li>
         <li>🧠 <strong>229,894 Knowledge Triplets</strong> extracted and converted to natural language</li>
         <li>🔍 <strong>FAISS Vector Search</strong> with 384-dimensional embeddings</li>
-        <li>🤖 <strong>LLaMA3-70B</strong> via Groq API for intelligent recommendations</li>
+        <li>🤖 <strong>LLM (Groq)</strong> — selectable models (e.g. llama-3.3-70b-versatile) for recommendations</li>
         <li>⚡ <strong>RAG Architecture</strong> for fact-grounded, explainable results</li>
         </ul>
         
