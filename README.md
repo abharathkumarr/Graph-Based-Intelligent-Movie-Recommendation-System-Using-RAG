@@ -1,4 +1,4 @@
-# Graph-Based Intelligent Movie Recommendation System Using RAG
+# Graph-Based Intelligent Movie Recommendation System Using RAG 
 
 > **Course:** CMPE 258 - Deep Learning (Spring 2026)  
 > **Group:** 19  
