@@ -2,6 +2,8 @@
 
 This file maps the professor’s **three deliverables** to concrete paths in this repository so a grader can verify everything in one pass.
 
+**Demo video (Google Drive):** [CMPE258_Group19_Demo_Video.mp4](https://drive.google.com/file/d/1EjjEb7zk4U2X9u1einyf2kfJwKbFtY-E/view?usp=sharing)
+
 ## 1. Project Report (Document)
 
 | Item | Location | Notes |
@@ -27,9 +29,7 @@ This file maps the professor’s **three deliverables** to concrete paths in thi
 
 | Item | Location | Notes |
 |------|----------|--------|
-| **Team demo video** | [`demo/CMPE258_Group19_Demo_Video.mp4`](./demo/CMPE258_Group19_Demo_Video.mp4) | **Landscape** recording; include **all members** (face + voice); show **live demo + repo**, not only portrait PPT slides (per rubric). |
-
-If the MP4 is too large for GitHub, host on **Google Drive** or **YouTube (unlisted)** and paste that URL in Canvas **and** add a one-line link at the top of this file.
+| **Team demo video** | In repo: [`demo/CMPE258_Group19_Demo_Video.mp4`](./demo/CMPE258_Group19_Demo_Video.mp4) — [Google Drive copy](https://drive.google.com/file/d/1EjjEb7zk4U2X9u1einyf2kfJwKbFtY-E/view?usp=sharing) | **Landscape** recording; include **all members** (face + voice); show **live demo + repo**, not only portrait PPT slides (per rubric). |
 
 ## Rubric cross-check (100 pts)
 
@@ -37,7 +37,7 @@ If the MP4 is too large for GitHub, host on **Google Drive** or **YouTube (unlis
 |------------------|------------------------|
 | **Project Document (20)** | `report/ProjectReport.pdf` — architecture, techniques, task split, references, **evaluation + model comparison**. |
 | **Software + implementation (60)** | Runnable layout, `README.md`, notebook + `evaluation/` artefacts aligned with the report, non-trivial KG+RAG+FAISS+multi-model eval. |
-| **Video demo (20)** | `demo/CMPE258_Group19_Demo_Video.mp4` — must satisfy format/content requirements when you record. |
+| **Video demo (20)** | `demo/CMPE258_Group19_Demo_Video.mp4` and [Google Drive](https://drive.google.com/file/d/1EjjEb7zk4U2X9u1einyf2kfJwKbFtY-E/view?usp=sharing) — must satisfy format/content requirements when you record. |
 
 ## “Finished implementation” rule (from assignment)
 

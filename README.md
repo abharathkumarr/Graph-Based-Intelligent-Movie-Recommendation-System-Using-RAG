@@ -21,7 +21,7 @@
 | If you want to see... | Open this file |
 |---|---|
 | **Final project report (Canvas / Turnitin PDF)** | [`report/ProjectReport.pdf`](./report/ProjectReport.pdf) |
-| **Team demo video (landscape)** | [`demo/CMPE258_Group19_Demo_Video.mp4`](./demo/CMPE258_Group19_Demo_Video.mp4) |
+| **Team demo video (landscape)** | In repo: [`demo/CMPE258_Group19_Demo_Video.mp4`](./demo/CMPE258_Group19_Demo_Video.mp4) — same file on [Google Drive](https://drive.google.com/file/d/1EjjEb7zk4U2X9u1einyf2kfJwKbFtY-E/view?usp=sharing) |
 | Final presentation slides | [`report/CMPE258_Project.pptx`](./report/CMPE258_Project.pptx) |
 | Project proposal | [`report/CMPE258_ProjectProposal.pdf`](./report/CMPE258_ProjectProposal.pdf) |
 | Main implementation + evaluation code | [`CMPE258_Project_Code.ipynb`](./CMPE258_Project_Code.ipynb) |
@@ -285,7 +285,7 @@ The repository is grouped by purpose so a reviewer can find each deliverable at 
 |-- CMPE258_Project_Code.ipynb      # Main implementation + evaluation notebook
 |-- knowledge_graph_ACTED_IN.html   # KG visualization used by the demo
 |
-|-- demo/                           # VIDEO deliverable (landscape team demo)
+|-- demo/                           # VIDEO: MP4 in repo; Drive link in README submission index
 |   `-- CMPE258_Group19_Demo_Video.mp4
 |
 |-- data/                           # INPUT to the evaluation
