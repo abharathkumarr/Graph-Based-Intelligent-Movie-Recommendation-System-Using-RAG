@@ -14,24 +14,9 @@
 
 ---
 
-## Submission Index (for the reviewer)
+## Demo video
 
-**Start here:** [`SUBMISSION.md`](./SUBMISSION.md) — maps the professor’s **three deliverables** (report, code, video) to exact paths in this repo.
-
-| If you want to see... | Open this file |
-|---|---|
-| **Final project report (Canvas / Turnitin PDF)** | [`report/ProjectReport.pdf`](./report/ProjectReport.pdf) |
-| **Team demo video (landscape)** | In repo: [`demo/CMPE258_Group19_Demo_Video.mp4`](./demo/CMPE258_Group19_Demo_Video.mp4) — same file on [Google Drive](https://drive.google.com/file/d/1EjjEb7zk4U2X9u1einyf2kfJwKbFtY-E/view?usp=sharing) |
-| Final presentation slides | [`report/CMPE258_Project.pptx`](./report/CMPE258_Project.pptx) |
-| Project proposal | [`report/CMPE258_ProjectProposal.pdf`](./report/CMPE258_ProjectProposal.pdf) |
-| Main implementation + evaluation code | [`CMPE258_Project_Code.ipynb`](./CMPE258_Project_Code.ipynb) |
-| Streamlit demo UI source | [`app_full.py`](./app_full.py) |
-| Per-query evaluation results | [`evaluation/eval_detailed_results.csv`](./evaluation/eval_detailed_results.csv) |
-| Per-model summary table | [`evaluation/eval_model_summary.csv`](./evaluation/eval_model_summary.csv) |
-| Evaluation plots (4 figures) | [`evaluation/`](./evaluation/) |
-| Architecture diagram | [`pipeline.png`](./pipeline.png) |
-| What each `docs/` file is for | [`docs/README.md`](./docs/README.md) |
-| Regenerate PDF/DOCX from CSVs (optional) | Run [`generate_report.py`](./generate_report.py) → writes `report/Report_Final.{pdf,docx}` |
+**Team demo (landscape):** [CMPE258_Group19_Demo_Video — Google Drive](https://drive.google.com/file/d/1EjjEb7zk4U2X9u1einyf2kfJwKbFtY-E/view?usp=sharing)
 
 ---
 
@@ -284,7 +269,7 @@ The repository is grouped by purpose so a reviewer can find each deliverable at 
 |-- CMPE258_Project_Code.ipynb      # Main implementation + evaluation notebook
 |-- knowledge_graph_ACTED_IN.html   # KG visualization used by the demo
 |
-|-- demo/                           # VIDEO: MP4 in repo; Drive link in README submission index
+|-- demo/                           # VIDEO: MP4 in repo (same file linked in Demo video above)
 |   `-- CMPE258_Group19_Demo_Video.mp4
 |
 |-- data/                           # INPUT to the evaluation
