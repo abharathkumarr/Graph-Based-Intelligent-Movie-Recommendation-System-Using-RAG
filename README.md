@@ -31,7 +31,6 @@
 | Evaluation plots (4 figures) | [`evaluation/`](./evaluation/) |
 | Architecture diagram | [`pipeline.png`](./pipeline.png) |
 | What each `docs/` file is for | [`docs/README.md`](./docs/README.md) |
-| Rubric alignment (optional) | [`docs/RUBRIC_ALIGNMENT.md`](./docs/RUBRIC_ALIGNMENT.md) |
 | Regenerate PDF/DOCX from CSVs (optional) | Run [`generate_report.py`](./generate_report.py) → writes `report/Report_Final.{pdf,docx}` |
 
 ---
@@ -296,13 +295,9 @@ The repository is grouped by purpose so a reviewer can find each deliverable at 
 |   `-- knowledge_graph_bg.png      # Background image for the Streamlit demo
 |
 |-- docs/                           # SUPPORTING DOCUMENTATION (see docs/README.md)
-|   |-- README.md                   # Explains which docs are required vs optional
+|   |-- README.md                   # Index of docs in this folder
 |   |-- USAGE.md                    # End-user usage instructions
-|   |-- DEPLOYMENT.md               # Hosting / deployment notes
-|   |-- MODEL_FILES.md              # How to obtain the .pkl knowledge files (important)
-|   |-- CHANGELOG.md                # Release log
-|   |-- CONTRIBUTING.md             # Contribution guidelines
-|   `-- RUBRIC_ALIGNMENT.md         # Optional rubric mapping
+|   `-- MODEL_FILES.md              # How to obtain the .pkl knowledge files (important)
 |
 |-- evaluation/                     # EVALUATION EVIDENCE (matches report tables/figures)
 |   |-- evaluation_visualizations.py
